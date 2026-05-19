@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="./style.css" />
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>Wmatrix</title>
+    <title>Photoguesser</title>
 
 
 
@@ -12,17 +12,37 @@
 
 <body>
     <div class="frame">
-<main class="guessCard">
-<figure class = "photo">
-<img src = "images/example1.jpg" width="2750" height="1833" loading="lazy" decoding="async">
-</figure>
+        <main class="guessCard">
+            <figure class = "photo">
+                <img src = "images/example1.webp" width="2750" height="1833" loading="lazy" decoding="async">
+            </figure>
 
-</main>
+        </main>
 
+<div class="questions">
+    <h2>where is this?</h2>
+</div>
 
+        <div class = "options">
 
+        <button class="quiz-card" onclick="checkAnswer(this)">
+            <span class="option-letter">A</span>
+       
+        </button>
+        <button class="quiz-card" onclick="checkAnswer(this)">
+            <span class="option-letter">b</span>
+       
+        </button>
+        <button class="quiz-card" onclick="checkAnswer(this)">
+            <span class="option-letter">c</span>
+       
+        </button>
+        <button class="quiz-card" onclick="checkAnswer(this)">
+            <span class="option-letter">d</span>
+       
+        </button>
 
-
+        </div>
 
 
 
