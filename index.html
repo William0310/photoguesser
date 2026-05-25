@@ -1,53 +1,228 @@
 <!DOCTYPE html>
-
+<html lang="en">
 <head>
     <link rel="stylesheet" href="./style.css" />
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>Photoguesser</title>
-
-
-
 </head>
 
 <body>
     <div class="frame">
         <main class="guessCard">
-            <figure class = "photo">
-                <img src = "images/example1.webp" width="2750" height="1833" loading="lazy" decoding="async">
+            <figure class="photo">
+                <img
+                    id="quiz-image"
+                    src="images/example1.webp"
+                    alt="Quiz photo"
+                    width="2750"
+                    height="1833"
+                    loading="lazy"
+                    decoding="async"
+                >
             </figure>
-
         </main>
 
-<div class="questions">
-    <h2>where is this?</h2>
-</div>
-
-        <div class = "options">
-
-        <button class="quiz-card" onclick="checkAnswer(this)">
-            <span class="option-letter">A</span>
-       
-        </button>
-        <button class="quiz-card" onclick="checkAnswer(this)">
-            <span class="option-letter">b</span>
-       
-        </button>
-        <button class="quiz-card" onclick="checkAnswer(this)">
-            <span class="option-letter">c</span>
-       
-        </button>
-        <button class="quiz-card" onclick="checkAnswer(this)">
-            <span class="option-letter">d</span>
-       
-        </button>
-
+        <div class="questions">
+            <h2 id="question-text">Where is this?</h2>
+            <p id="progress-text">1 / 4</p>
         </div>
 
+        <div class="options">
+            <button class="quiz-card" onclick="checkAnswer(0)">
+                <span class="option-letter">A</span>
+                <span class="option-text" id="option-0">Option 1</span>
+            </button>
+            <button class="quiz-card" onclick="checkAnswer(1)">
+                <span class="option-letter">B</span>
+                <span class="option-text" id="option-1">Option 2</span>
+            </button>
+            <button class="quiz-card" onclick="checkAnswer(2)">
+                <span class="option-letter">C</span>
+                <span class="option-text" id="option-2">Option 3</span>
+            </button>
+            <button class="quiz-card" onclick="checkAnswer(3)">
+                <span class="option-letter">D</span>
+                <span class="option-text" id="option-3">Option 4</span>
+            </button>
+        </div>
 
-
-
-
+        <div class="result" id="result-box">
+            <h2>You finished! Nice Job!.</h2>
+            <p id="score-text">You got 0 right</p>
+            <button class="restart-btn" onclick="restartQuiz()">Play again</button>
+        </div>
     </div>
 
+    <script>
+        const quizData = [
+            {
+                image: "images/example1.webp",
+                question: "Where is this?",
+                options: ["Chaka Salt Lake, China", "Kawaguchi Lake, Japan", "ChingHai Lake", "My back yard"],
+                correct: 0
+            },
+           
+            {
+                image: "images/example3.webp",
+                question: "Where is this?",
+                options: ["London,UK", "NanJing, China", "Seoul, Korea", "ChongQing, China"],
+                correct: 3
+            },
+            
+              {
+                image: "images/example25.webp",
+                question: "What time is this taken?",
+                options: ["Early Morning", "Noon", "Sunset", "Midnight"],
+                correct: 0
+            },  
+            
+            
+            
+            
+            
+             {
+                image: "images/example12.webp",
+                question: "Where is this?",
+                options: ["Lake Osaka", "Kawaguchiko/Lake Kawaguchi", "Lake Kamanashi", "Lake Biwa"],
+                correct: 1
+            },  {
+                image: "images/example40.webp",
+                question: "Where is this?",
+                options: ["Osaka", "Kyoto", "Nagoya", "Fukuoka"],
+                correct: 1
+            },   {
+                image: "images/example18.webp",
+                question: "Guess The season this Photo is taken at.",
+                options: ["Spring", "Summer", "Fall", "Winter"],
+                correct: 2
+            }, 
+              {
+                image: "images/example37.webp",
+                question: "Guess the Appoximate Temperature of this place",
+                options: ["-25c/-13F", "-2c/28F", "14c/57F", "23c/73F"],
+                correct: 2
+            }, 
+            
+            
+            
+            {
+                image: "images/example55.webp",
+                question: "Where is this?",
+                options: ["Moscow", "Kyoto", "Tokyo", "Shanghai"],
+                correct: 2
+            },
+
+             {
+                image: "images/example23.webp",
+                question: "[2x Point] Guess the appox Focal Length of the lens that shot photo",
+                options: ["24mm/1x", "50mm/2x", "75mm/3x", "100mm/4x"],
+                correct: 3
+            },
+
+ {
+                image: "images/example32.webp",
+                question: "Guess Where I'm standing.",
+                options: ["Front of the train", "Back of the Train","Above the train", "Below the train"],
+                correct: 0
+            },
+
+
+
+
+
+
+
+
+
+
+            
+        ];
+
+        const pic = document.getElementById("quiz-image");
+        const text = document.getElementById("question-text");
+        const num = document.getElementById("progress-text");
+        const btns = document.querySelectorAll(".quiz-card");
+        const opts = document.querySelectorAll(".option-text");
+        const resultBox = document.getElementById("result-box");
+        const scoreText = document.getElementById("score-text");
+
+        let i = 0;
+        let stop = false;
+        let score = 0;
+
+        function show() {
+        let q = quizData[i];
+
+        resultBox.style.display = "none";
+        pic.style.display = "block";
+        document.querySelector(".options").style.display = "grid";
+
+        pic.src = q.image;
+        text.textContent = q.question;
+        num.textContent = i + 1 + " / " + quizData.length;
+
+        for (let j = 0; j < opts.length; j++) {
+            opts[j].textContent = q.options[j];
+        }
+
+        for (let j = 0; j < btns.length; j++) {
+            btns[j].classList.remove("correct");
+            btns[j].classList.remove("wrong");
+            btns[j].disabled = false;
+        }
+
+        stop = false;
+        }
+
+        function next() {
+        i++;
+
+        if (i >= quizData.length) {
+            endQuiz();
+            return;
+        }
+
+        show();
+        }
+
+        function checkAnswer(n) {
+        if (stop) return;
+
+        stop = true;
+        let q = quizData[i];
+
+        if (n === q.correct) {
+            btns[n].classList.add("correct");
+            score++;
+        } else {
+            btns[n].classList.add("wrong");
+        }
+
+        for (let j = 0; j < btns.length; j++) {
+            btns[j].disabled = true;
+        }
+
+        setTimeout(next, 0);
+        }
+
+        function endQuiz() {
+        pic.style.display = "none";
+        document.querySelector(".options").style.display = "none";
+        text.textContent = "All done";
+        num.textContent = quizData.length + " / " + quizData.length;
+        scoreText.textContent = "You got " + score + " out of " + quizData.length + " right";
+        resultBox.style.display = "block";
+        }
+
+        function restartQuiz() {
+        i = 0;
+        score = 0;
+        stop = false;
+        show();
+        }
+
+        show();
+    </script>
 </body>
+</html>
